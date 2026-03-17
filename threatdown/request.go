@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
 	"net/http"
 )
 
@@ -80,9 +81,7 @@ func getAll[T, R any](ctx context.Context, c *Client, url string, params map[str
 	cursor := ""
 	for {
 		p := make(map[string]string, len(params)+1)
-		for k, v := range params {
-			p[k] = v
-		}
+		maps.Copy(p, params)
 		if cursor != "" {
 			p["cursor"] = cursor
 		}

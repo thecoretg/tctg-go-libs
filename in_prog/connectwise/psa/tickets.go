@@ -9,20 +9,20 @@ const (
 	ticketLinkBase = "https://na.myconnectwise.net/v4_6_release/services/system_io/Service/fv_sr100_request.rails?service_recid="
 )
 
-func ticketIdEndpoint(ticketId int) string {
-	return fmt.Sprintf("service/tickets/%d", ticketId)
+func ticketIDEndpoint(ticketID int) string {
+	return fmt.Sprintf("service/tickets/%d", ticketID)
 }
 
-func notesEndpoint(ticketId int) string {
-	return fmt.Sprintf("%s/notes", ticketIdEndpoint(ticketId))
+func notesEndpoint(ticketID int) string {
+	return fmt.Sprintf("%s/notes", ticketIDEndpoint(ticketID))
 }
 
-func allNotesEndpoint(ticketId int) string {
-	return fmt.Sprintf("%s/allNotes", ticketIdEndpoint(ticketId))
+func allNotesEndpoint(ticketID int) string {
+	return fmt.Sprintf("%s/allNotes", ticketIDEndpoint(ticketID))
 }
 
-func specificNoteEndpoint(ticketId, noteId int) string {
-	return fmt.Sprintf("%s/notes/%d", ticketIdEndpoint(ticketId), noteId)
+func specificNoteEndpoint(ticketID, noteID int) string {
+	return fmt.Sprintf("%s/notes/%d", ticketIDEndpoint(ticketID), noteID)
 }
 
 func (c *Client) PostTicket(ctx context.Context, ticket *Ticket) (*Ticket, error) {
@@ -34,19 +34,19 @@ func (c *Client) ListTickets(ctx context.Context, params map[string]string) ([]T
 }
 
 func (c *Client) GetTicket(ctx context.Context, ticketID int, params map[string]string) (*Ticket, error) {
-	return GetOne[Ticket](ctx, c, ticketIdEndpoint(ticketID), params)
+	return GetOne[Ticket](ctx, c, ticketIDEndpoint(ticketID), params)
 }
 
 func (c *Client) PutTicket(ctx context.Context, ticketID int, ticket *Ticket) (*Ticket, error) {
-	return Put[Ticket](ctx, c, ticketIdEndpoint(ticketID), ticket)
+	return Put[Ticket](ctx, c, ticketIDEndpoint(ticketID), ticket)
 }
 
 func (c *Client) PatchTicket(ctx context.Context, ticketID int, patchOps []PatchOp) (*Ticket, error) {
-	return Patch[Ticket](ctx, c, ticketIdEndpoint(ticketID), patchOps)
+	return Patch[Ticket](ctx, c, ticketIDEndpoint(ticketID), patchOps)
 }
 
 func (c *Client) DeleteTicket(ctx context.Context, ticketID int) error {
-	return Delete(ctx, c, ticketIdEndpoint(ticketID))
+	return Delete(ctx, c, ticketIDEndpoint(ticketID))
 }
 
 // ListServiceTicketNotesAll gets all ticket notes, regardless of if they have a time entry.

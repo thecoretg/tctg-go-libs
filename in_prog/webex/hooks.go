@@ -64,10 +64,10 @@ func splitHeaderVals(s string) (string, string) {
 	var sh2, sh5 string
 	for part := range strings.SplitSeq(s, ",") {
 		part = strings.TrimSpace(part)
-		if strings.HasPrefix(part, "SHA-256=") {
-			sh2 = strings.TrimPrefix(part, "SHA-256=")
-		} else if strings.HasPrefix(part, "SHA-512=") {
-			sh5 = strings.TrimPrefix(part, "SHA-512=")
+		if after, ok := strings.CutPrefix(part, "SHA-256="); ok {
+			sh2 = after
+		} else if after, ok := strings.CutPrefix(part, "SHA-512="); ok {
+			sh5 = after
 		}
 	}
 

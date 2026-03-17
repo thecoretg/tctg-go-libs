@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	baseUrl = "https://api-na.myconnectwise.net/v4_6_release/apis/3.0"
+	baseURL = "https://api-na.myconnectwise.net/v4_6_release/apis/3.0"
 )
 
 var ErrNotFound = errors.New("404 status returned")
@@ -20,7 +20,7 @@ func GetOne[T any](ctx context.Context, c *Client, endpoint string, params map[s
 		SetContext(ctx).
 		SetQueryParams(params).
 		SetResult(&target).
-		Get(fullURL(baseUrl, endpoint))
+		Get(fullURL(baseURL, endpoint))
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func GetOne[T any](ctx context.Context, c *Client, endpoint string, params map[s
 func GetMany[T any](ctx context.Context, c *Client, endpoint string, params map[string]string) ([]T, error) {
 	var allItems []T
 
-	endpoint = fullURL(baseUrl, endpoint)
+	endpoint = fullURL(baseURL, endpoint)
 	for endpoint != "" {
 		var target []T
 		res, err := c.restClient.R().
@@ -71,7 +71,7 @@ func Post[T any](ctx context.Context, c *Client, endpoint string, body any) (*T,
 		SetContext(ctx).
 		SetBody(body).
 		SetResult(&target).
-		Post(fullURL(baseUrl, endpoint))
+		Post(fullURL(baseURL, endpoint))
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func Put[T any](ctx context.Context, c *Client, endpoint string, body any) (*T, 
 		SetContext(ctx).
 		SetBody(body).
 		SetResult(&target).
-		Put(fullURL(baseUrl, endpoint))
+		Put(fullURL(baseURL, endpoint))
 	if err != nil {
 		return nil, err
 	}
@@ -110,7 +110,7 @@ func Patch[T any](ctx context.Context, c *Client, endpoint string, patchOps []Pa
 		SetContext(ctx).
 		SetBody(patchOps).
 		SetResult(&target).
-		Patch(fullURL(baseUrl, endpoint))
+		Patch(fullURL(baseURL, endpoint))
 	if err != nil {
 		return nil, err
 	}
@@ -125,7 +125,7 @@ func Patch[T any](ctx context.Context, c *Client, endpoint string, patchOps []Pa
 func Delete(ctx context.Context, c *Client, endpoint string) error {
 	res, err := c.restClient.R().
 		SetContext(ctx).
-		Delete(fullURL(baseUrl, endpoint))
+		Delete(fullURL(baseURL, endpoint))
 	if err != nil {
 		return err
 	}

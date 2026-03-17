@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-func companyIdEndpoint(companyId int) string {
-	return fmt.Sprintf("company/companies/%d", companyId)
+func companyIDEndpoint(companyID int) string {
+	return fmt.Sprintf("company/companies/%d", companyID)
 }
 
 func (c *Client) PostCompany(ctx context.Context, company *Company) (*Company, error) {
@@ -18,17 +18,17 @@ func (c *Client) ListCompanies(ctx context.Context, params map[string]string) ([
 }
 
 func (c *Client) GetCompany(ctx context.Context, companyID int, params map[string]string) (*Company, error) {
-	return GetOne[Company](ctx, c, companyIdEndpoint(companyID), params)
+	return GetOne[Company](ctx, c, companyIDEndpoint(companyID), params)
 }
 
 func (c *Client) PutCompany(ctx context.Context, companyID int, company *Company) (*Company, error) {
-	return Put[Company](ctx, c, companyIdEndpoint(companyID), company)
+	return Put[Company](ctx, c, companyIDEndpoint(companyID), company)
 }
 
 func (c *Client) PatchCompany(ctx context.Context, companyID int, patchOps []PatchOp) (*Company, error) {
-	return Patch[Company](ctx, c, companyIdEndpoint(companyID), patchOps)
+	return Patch[Company](ctx, c, companyIDEndpoint(companyID), patchOps)
 }
 
 func (c *Client) DeleteCompany(ctx context.Context, companyID int) error {
-	return Delete(ctx, c, companyIdEndpoint(companyID))
+	return Delete(ctx, c, companyIDEndpoint(companyID))
 }

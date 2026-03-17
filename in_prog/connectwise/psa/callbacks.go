@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func callbackIdEndpoint(callbackID int) string {
+func callbackIDEndpoint(callbackID int) string {
 	return fmt.Sprintf("system/callbacks/%d", callbackID)
 }
 
@@ -24,19 +24,19 @@ func (c *Client) ListCallbacks(ctx context.Context, params map[string]string) ([
 }
 
 func (c *Client) GetCallback(ctx context.Context, callbackID int, params map[string]string) (*Callback, error) {
-	return GetOne[Callback](ctx, c, callbackIdEndpoint(callbackID), params)
+	return GetOne[Callback](ctx, c, callbackIDEndpoint(callbackID), params)
 }
 
 func (c *Client) PutCallback(ctx context.Context, callbackID int, webhook *Callback) (*Callback, error) {
-	return Put[Callback](ctx, c, callbackIdEndpoint(callbackID), webhook)
+	return Put[Callback](ctx, c, callbackIDEndpoint(callbackID), webhook)
 }
 
 func (c *Client) PatchCallback(ctx context.Context, callbackID int, patchOps []PatchOp) (*Callback, error) {
-	return Patch[Callback](ctx, c, callbackIdEndpoint(callbackID), patchOps)
+	return Patch[Callback](ctx, c, callbackIDEndpoint(callbackID), patchOps)
 }
 
 func (c *Client) DeleteCallback(ctx context.Context, callbackID int) error {
-	return Delete(ctx, c, callbackIdEndpoint(callbackID))
+	return Delete(ctx, c, callbackIDEndpoint(callbackID))
 }
 
 func ValidateWebhook(r *http.Request) (bool, error) {

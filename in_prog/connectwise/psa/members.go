@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-func memberIdEndpoint(memberId int) string {
-	return fmt.Sprintf("system/members/%d", memberId)
+func memberIDEndpoint(memberID int) string {
+	return fmt.Sprintf("system/members/%d", memberID)
 }
 
 func (c *Client) PostMember(ctx context.Context, member *Member) (*Member, error) {
@@ -39,17 +39,17 @@ func (c *Client) GetMemberByIdentifier(ctx context.Context, identifier string) (
 }
 
 func (c *Client) GetMember(ctx context.Context, memberID int, params map[string]string) (*Member, error) {
-	return GetOne[Member](ctx, c, memberIdEndpoint(memberID), params)
+	return GetOne[Member](ctx, c, memberIDEndpoint(memberID), params)
 }
 
 func (c *Client) PutMember(ctx context.Context, memberID int, member *Member) (*Member, error) {
-	return Put[Member](ctx, c, memberIdEndpoint(memberID), member)
+	return Put[Member](ctx, c, memberIDEndpoint(memberID), member)
 }
 
 func (c *Client) PatchMember(ctx context.Context, memberID int, patchOps []PatchOp) (*Member, error) {
-	return Patch[Member](ctx, c, memberIdEndpoint(memberID), patchOps)
+	return Patch[Member](ctx, c, memberIDEndpoint(memberID), patchOps)
 }
 
 func (c *Client) DeleteMember(ctx context.Context, memberID int) error {
-	return Delete(ctx, c, memberIdEndpoint(memberID))
+	return Delete(ctx, c, memberIDEndpoint(memberID))
 }
