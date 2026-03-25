@@ -30,7 +30,7 @@ type listOrgsResp struct {
 }
 
 func (c *Client) ListOrgs(ctx context.Context) ([]Org, error) {
-	result, err := get[listOrgsResp](ctx, c, c.listOrgsURL, nil)
+	result, err := Get[listOrgsResp](ctx, c.wc, c.listOrgsURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("list orgs: %w", err)
 	}

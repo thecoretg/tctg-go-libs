@@ -3,6 +3,7 @@ package salesforce
 import (
 	"context"
 	"encoding/json"
+	"os"
 	"testing"
 
 	"github.com/joho/godotenv"
@@ -11,7 +12,11 @@ import (
 func newTestClient(t *testing.T) *Client {
 	t.Helper()
 	_ = godotenv.Load("../.env")
-	client, err := NewClient(context.Background())
+	client, err := NewClient(context.Background(), Config{
+		ClientID:       os.Getenv("SALESFORCE_CLIENT_ID"),
+		ClientSecret:   os.Getenv("SALESFORCE_CLIENT_SECRET"),
+		CompanyURLName: os.Getenv("SALESFORCE_COMPANY_URL_NAME"),
+	})
 	if err != nil {
 		t.Skip("skipping integration test:", err)
 	}

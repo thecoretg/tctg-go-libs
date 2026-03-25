@@ -3,6 +3,7 @@ package threatdown
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -12,7 +13,10 @@ import (
 func newTestClient(t *testing.T) *Client {
 	t.Helper()
 	_ = godotenv.Load("../.env")
-	client, err := NewClient(context.Background())
+	client, err := NewClient(context.Background(), Config{
+		ClientID:     os.Getenv("THREATDOWN_CLIENT_ID"),
+		ClientSecret: os.Getenv("THREATDOWN_CLIENT_SECRET"),
+	})
 	if err != nil {
 		t.Skip("skipping integration test:", err)
 	}

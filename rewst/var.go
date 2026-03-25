@@ -19,7 +19,7 @@ type (
 )
 
 func (c *Client) UpsertOrgVar(ctx context.Context, input UpsertOrgVarInput) error {
-	result, err := post[UpsertOrgVarResp](ctx, c, c.upsertVarURL, input)
+	result, err := Post[UpsertOrgVarResp](ctx, c.wc, c.upsertVarURL, input)
 	if err != nil {
 		return fmt.Errorf("upsert org var: %w", err)
 	}

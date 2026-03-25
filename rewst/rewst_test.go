@@ -11,7 +11,11 @@ import (
 func newTestClient(t *testing.T) *Client {
 	t.Helper()
 	_ = godotenv.Load("../.env")
-	client, err := NewClient()
+	client, err := NewClient(Config{
+		WebhookSecret: os.Getenv("REWST_WEBHOOK_SECRET"),
+		ListOrgsURL:   os.Getenv("REWST_LIST_ORGS_URL"),
+		UpsertVarURL:  os.Getenv("REWST_UPSERT_ORG_VAR_URL"),
+	})
 	if err != nil {
 		t.Skip("skipping integration test:", err)
 	}

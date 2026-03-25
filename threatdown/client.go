@@ -3,7 +3,6 @@ package threatdown
 import (
 	"context"
 	"fmt"
-	"os"
 	"strings"
 
 	"golang.org/x/oauth2"
@@ -12,31 +11,35 @@ import (
 )
 
 const (
-	envVarClientID     = "THREATDOWN_CLIENT_ID"
-	envVarClientSecret = "THREATDOWN_CLIENT_SECRET"
-	tokenURL           = "https://api.threatdown.com/oneview/oauth2/token"
-	baseURLV1          = "https://api.threatdown.com/oneview/v1"
-	baseURLV2          = "https://api.threatdown.com/oneview/v2"
+	tokenURL  = "https://api.threatdown.com/oneview/oauth2/token"
+	baseURLV1 = "https://api.threatdown.com/oneview/v1"
+	baseURLV2 = "https://api.threatdown.com/oneview/v2"
 )
+
+type Config struct {
+	ClientID     string
+	ClientSecret string
+}
 
 type Client struct {
 	restClient *resty.Client
 }
 
-type envVars struct {
-	clientID     string
-	clientSecret string
-}
-
-func NewClient(ctx context.Context) (*Client, error) {
-	ev := getEnvVars()
-	if err := ev.validate(); err != nil {
-		return nil, fmt.Errorf("validating env vars: %w", err)
+func NewClient(ctx context.Context, cfg Config) (*Client, error) {
+	var missing []string
+	if cfg.ClientID == "" {
+		missing = append(missing, "ClientID")
+	}
+	if cfg.ClientSecret == "" {
+		missing = append(missing, "ClientSecret")
+	}
+	if len(missing) > 0 {
+		return nil, fmt.Errorf("missing threatdown config fields: %s", strings.Join(missing, ", "))
 	}
 
 	ts := (&clientcredentials.Config{
-		ClientID:     ev.clientID,
-		ClientSecret: ev.clientSecret,
+		ClientID:     cfg.ClientID,
+		ClientSecret: cfg.ClientSecret,
 		TokenURL:     tokenURL,
 		Scopes:       []string{"read", "write"},
 	}).TokenSource(ctx)
@@ -55,25 +58,4 @@ func endpointURLV1(endpoint string) string {
 
 func endpointURLV2(endpoint string) string {
 	return fmt.Sprintf("%s/%s", baseURLV2, endpoint)
-}
-
-func getEnvVars() envVars {
-	return envVars{
-		clientID:     os.Getenv(envVarClientID),
-		clientSecret: os.Getenv(envVarClientSecret),
-	}
-}
-
-func (e envVars) validate() error {
-	var missing []string
-	if e.clientID == "" {
-		missing = append(missing, envVarClientID)
-	}
-	if e.clientSecret == "" {
-		missing = append(missing, envVarClientSecret)
-	}
-	if len(missing) > 0 {
-		return fmt.Errorf("missing threatdown env vars: %s", strings.Join(missing, ", "))
-	}
-	return nil
 }

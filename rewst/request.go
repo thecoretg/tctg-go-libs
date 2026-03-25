@@ -4,13 +4,28 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+
+	"resty.dev/v3"
 )
 
 var ErrNotFound = fmt.Errorf("404 status returned")
 
-func get[T any](ctx context.Context, c *Client, url string, params map[string]string) (*T, error) {
+type WebhookClient struct {
+	rc *resty.Client
+}
+
+func NewWebhookClient(secret string) *WebhookClient {
+	rc := resty.New()
+	rc.SetHeader("Accept", "application/json")
+	rc.SetHeader("x-rewst-secret", secret)
+	rc.SetRetryCount(3)
+	rc.SetDisableWarn(true)
+	return &WebhookClient{rc: rc}
+}
+
+func Get[T any](ctx context.Context, wc *WebhookClient, url string, params map[string]string) (*T, error) {
 	var target T
-	res, err := c.restClient.R().
+	res, err := wc.rc.R().
 		SetContext(ctx).
 		SetQueryParams(params).
 		SetResult(&target).
@@ -18,20 +33,23 @@ func get[T any](ctx context.Context, c *Client, url string, params map[string]st
 	if err != nil {
 		return nil, err
 	}
-
 	if res.IsError() {
 		if res.StatusCode() == http.StatusNotFound {
 			return nil, ErrNotFound
 		}
 		return nil, fmt.Errorf("error response from Rewst: %s", res.String())
 	}
-
 	return &target, nil
 }
 
-func post[T any](ctx context.Context, c *Client, url string, body any) (*T, error) {
+func Send(ctx context.Context, wc *WebhookClient, url string, body any) error {
+	_, err := Post[struct{}](ctx, wc, url, body)
+	return err
+}
+
+func Post[T any](ctx context.Context, wc *WebhookClient, url string, body any) (*T, error) {
 	var target T
-	res, err := c.restClient.R().
+	res, err := wc.rc.R().
 		SetContext(ctx).
 		SetHeader("Content-Type", "application/json").
 		SetBody(body).
@@ -40,10 +58,8 @@ func post[T any](ctx context.Context, c *Client, url string, body any) (*T, erro
 	if err != nil {
 		return nil, err
 	}
-
 	if res.IsError() {
 		return nil, fmt.Errorf("error response from Rewst: %s", res.String())
 	}
-
 	return &target, nil
 }
