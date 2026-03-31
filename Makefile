@@ -11,3 +11,6 @@ test-rewst:
 
 test-sf:
 	go test -v ./salesforce/...
+
+test-iru:
+	go test -v ./iru/...
