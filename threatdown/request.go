@@ -31,6 +31,7 @@ func get[T any](ctx context.Context, c *Client, url string, params map[string]st
 	return &target, nil
 }
 
+
 func post[T any](ctx context.Context, c *Client, url string, body any) (*T, error) {
 	var target T
 	res, err := c.restClient.R().
