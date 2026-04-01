@@ -16,6 +16,7 @@ type Endpoint struct {
 	ProtectionStatus string `json:"protection_status"`
 	DisplayName      string `json:"display_name"`
 	Agent            struct {
+		SerialNumber              string `json:"serial_number"`
 		HasAlerts                 bool   `json:"has_alerts"`
 		IsSoftwareUpdateAvailable bool   `json:"is_software_update_available"`
 		LastUser                  string `json:"last_user"`
