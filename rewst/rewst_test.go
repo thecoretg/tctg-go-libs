@@ -12,9 +12,10 @@ func newTestClient(t *testing.T) *Client {
 	t.Helper()
 	_ = godotenv.Load("../.env")
 	client, err := NewClient(Config{
-		WebhookSecret: os.Getenv("REWST_WEBHOOK_SECRET"),
-		ListOrgsURL:   os.Getenv("REWST_LIST_ORGS_URL"),
-		UpsertVarURL:  os.Getenv("REWST_UPSERT_ORG_VAR_URL"),
+		WebhookSecret:   os.Getenv("REWST_WEBHOOK_SECRET"),
+		ListOrgsURL:     os.Getenv("REWST_LIST_ORGS_URL"),
+		UpsertVarURL:    os.Getenv("REWST_UPSERT_ORG_VAR_URL"),
+		GetOrgVarMapURL: os.Getenv("REWST_GET_ORG_VAR_MAP_URL"),
 	})
 	if err != nil {
 		t.Skip("skipping integration test:", err)
@@ -40,6 +41,27 @@ func TestUpsertOrgVar(t *testing.T) {
 	})
 	if err != nil {
 		t.Fatalf("UpsertOrgVar: %v", err)
+	}
+}
+
+func TestGetOrgVarMap(t *testing.T) {
+	c := newTestClient(t)
+	ctx := context.Background()
+
+	varName := os.Getenv("REWST_GET_VAR_NAME")
+	if varName == "" {
+		t.Skip("skipping: REWST_GET_VAR_NAME must be set")
+	}
+
+	result, err := c.GetOrgVarMap(ctx, GetOrgVarMapInput{
+		VarName: varName,
+	})
+	if err != nil {
+		t.Fatalf("GetOrgVarMap: %v", err)
+	}
+	t.Logf("got %d entries in map", len(result.Map))
+	for k, v := range result.Map {
+		t.Logf("  %s: %s", k, v)
 	}
 }
 
